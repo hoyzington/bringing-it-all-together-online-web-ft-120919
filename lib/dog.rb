@@ -3,7 +3,7 @@ class Dog
   attr_accessor 
   
   def initialize(id: nil, name:, breed:)
-    (@id, @name, @breed) = (id, name, breed)
+    @id, @name, @breed = id, name, breed
   end
   
   def self.create_table
