@@ -7,31 +7,40 @@ class Dog
   end
   
   def self.create_table
-    DB[:conn].execute()
+    sql = <<-SQL
+      CREATE TABLE dogs (id INTEGER PRIMAEY KEY, name TEXT, breed TEXT)
+    SQL
+    DB[:conn].execute(sql)
   end
 
   def self.drop_table
-    DB[:conn].execute()
+    DB[:conn].execute("DROP TABLE dogs")
   end
   
   def save
-    DB[:conn].execute()
+    sql = "INSERT INTO dogs (name, breed) VALUES (?, ?)"
+    DB[:conn].execute(sql, self.name, self.breed)
+    @id = DB[:conn].execute("SELECT * FROM dogs")[0][0]
   end
   
-  def self.create
-    DB[:conn].execute()
+  def self.create(name:, breed:)
+    dog = self.new(name, breed)
+    dog.save
+    dog
   end
   
-  def self.new_from_db
-    DB[:conn].execute()
+  def self.new_from_db(row)
+    self.new(row[0], row[1], row[2])
   end
   
-  def self.find_by_id
-    DB[:conn].execute()
+  def self.find_by_id(id)
+    sql = "SELECT * FROM dogs WHERE id = ?"
+    row = DB[:conn].execute(sql, id)[0]
+    self.new_from_db(row)
   end
   
   def self.find_or_create_by
-    DB[:conn].execute()
+    
   end
   
   def find_by_name
